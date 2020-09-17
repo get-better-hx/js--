@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>输出制定数字范围内包含1的个数</title>
+</head>
+<body>
+  <h1>请输出1到400之间所有数字中包含的1的个数，比如数字1中包含了一个1, 数字11中包含了两个1,数字20中不包含1,数字1到21中共包含了13个1</h1>
+</body>
+<script>
+  // 方案一：
+  const sum1s = (num) => {
+    let numstr
+    if (!num) return 0
+    if (typeof num === 'string') numstr = num
+    else numstr = String(num)
+
+    if (Number(numstr) === 0) return 0
+    // **幂运算相当于Math.pow
+    const curr = numstr[0] > 1 ? 10 ** (numstr.length - 1) + numstr[0] * (numstr.length - 1) * 10 ** (numstr.length - 2) : sum1s(10 ** (numstr.length - 1) - 1) + 1
+
+    return curr + sum1s(numstr.substr(1))
+  }
+
+  console.log(sum1s(400))
+
+  // 方案二：有问题
+  const num = new Array(400).fill(0).reduce((x, y, z) => {
+    x += `${ z + 1 }`.split('').filter(_ => _ === 1).length
+    return x
+  }, 0)
+
+
+  // 方案三：
+  function getCount (len) {
+    let num = 0
+
+    for (let i = 1; i <= len; i++) {
+      let str = String(i)
+      str.replace(/1/g, function () {
+        num++
+      })
+    }
+    return num
+  }
+  console.log(getCount(400))
+
+  // 方案四：
+  let str = ''
+
+  for (let i = 1; i <= 400; i++) {
+    str += i
+  }
+
+  return str.match(/1/g).length
+
+
+  // 方案五：
+  let res = []
+  Array.from({length: 50}, (v, k) => k).reduce((t, arr) => {
+    return arr.toString().indexOf('1') === 0 ? res.push(arr) : null
+  })
+
+  // 方案六：
+  function getNum (num, range) {
+    return Object.keys(Array(range + 1).fill()).join('').match(new RegExp(num, 'g')).length
+  }
+</script>
+</html>
